@@ -1,0 +1,296 @@
+{% include 'base.html' %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load bootstrap_icons %}
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Grdnrs</title>
+        <style>
+            b1{
+                text-decoration: underline;
+                font-weight: 700;
+                color: rgb(10, 52, 141);
+            }
+            #showmore{
+                display: none;
+            }
+            
+            body{counter-reset: Serial;}
+            table{border-collapse: separate; font-size: smaller; overflow-x:auto;}
+            tr td:first-child:before{
+                counter-increment: Serial;      /* Increment the Serial counter */
+                content:counter(Serial); /* Display the counter */}
+        </style>
+        <script>
+            function sortTable(n) {
+              var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+              table = document.getElementById("myTable");
+              switching = true;
+              //Set the sorting direction to ascending:
+              dir = "asc"; 
+              /*Make a loop that will continue until
+              no switching has been done:*/
+              while (switching) {
+                //start by saying: no switching is done:
+                switching = false;
+                rows = table.rows;
+                /*Loop through all table rows (except the
+                first, which contains table headers):*/
+                for (i = 1; i < (rows.length - 1); i++) {
+                  //start by saying there should be no switching:
+                  shouldSwitch = false;
+                  /*Get the two elements you want to compare,
+                  one from current row and one from the next:*/
+                  x = rows[i].getElementsByTagName("TD")[n];
+                  y = rows[i + 1].getElementsByTagName("TD")[n];
+                  /*check if the two rows should switch place,
+                  based on the direction, asc or desc:*/
+                  if (dir == "asc") {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                      //if so, mark as a switch and break the loop:
+                      shouldSwitch= true;
+                      break;
+                    }
+                  } else if (dir == "desc") {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                      //if so, mark as a switch and break the loop:
+                      shouldSwitch = true;
+                      break;
+                    }
+                  }
+                }
+                if (shouldSwitch) {
+                  /*If a switch has been marked, make the switch
+                  and mark that a switch has been done:*/
+                  rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                  switching = true;
+                  //Each time a switch is done, increase this count by 1:
+                  switchcount ++;      
+                } else {
+                  /*If no switching has been done AND the direction is "asc",
+                  set the direction to "desc" and run the while loop again.*/
+                  if (switchcount == 0 && dir == "asc") {
+                    dir = "desc";
+                    switching = true;
+                  }
+                }
+              }
+            }
+           
+            var k1 = '{{key}}'
+            document.addEventListener('DOMContentLoaded', function(){
+                if(k1 == 0){
+                document.getElementById('grdnr_list').style.display = 'block';
+                document.getElementById('showmore').style.display = 'none';
+            }else{
+                document.getElementById('grdnr_list').style.display = 'none';
+                document.getElementById('showmore').style.display = 'block';
+                document.getElementById('div3').style.width = "{{count_tasks}}%";
+                document.getElementById('div2').style.width = "{{count_active_tasks}}%";
+                document.getElementById('div1').style.width="{{count_completed_tasks}}%";
+                var table = document.getElementById("myTaskTable"), sumVal = 0;
+                for(var i =1; i<table.rows.length; i++){
+                sumVal = sumVal+parseInt(table.rows[i].cells[4].innerHTML);
+                }
+                document.getElementById("sumofall").innerHTML = "Total Sum = "+ sumVal;
+                document.getElementById("totalearnings").innerHTML = sumVal+" AED";
+                 }
+            }, false);
+            
+
+            // function showMore(idno, name, phone, account_status, Joining_date, address){
+                
+            //     document.getElementById('showmore').style.display = 'block';
+            //     document.getElementById('name').textContent = name;
+            //     document.getElementById('idno').textContent = idno;
+            //     // document.getElementById('select_id').textContent = idno;
+            //     document.getElementById('phone').textContent = phone;
+            //     document.getElementById('account_status').textContent = account_status;
+            //     document.getElementById('Joining_date').textContent = Joining_date;
+            //     document.getElementById('address').textContent = address;
+            //     // document.getElementById('more').style.display = "block";
+            //     document.getElementById('grdnr_list').style.display = 'none';
+            // }
+
+            function currency_change(v){
+                if(v == 'USD'){
+                    document.getElementById('total_earned').textContent = "$"+0.27*1000;
+                    document.getElementById('balance').textContent = "$"+0.27*500;
+                    document.getElementById('advance').textContent = "$"+0.27*100;
+                }else if(v=='PKR'){
+                    document.getElementById('total_earned').textContent = "PKR."+47.2*1000;
+                    document.getElementById('balance').textContent = "PKR."+47.2*500;
+                    document.getElementById('advance').textContent = "PKR."+47.2*100;
+                }else{
+                    document.getElementById('total_earned').textContent = "AED 1000";
+                    document.getElementById('balance').textContent = "AED 500";
+                    document.getElementById('advance').textContent = "AED 100";
+                }
+            }    
+        </script>
+    </head>
+    <body>
+        <div class="row container">
+            <div class="col-2"></div>
+            <div class="col-10" id="grdnr_list">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>All GRDNR'S INFO</strong>
+                    </div>
+                    <div class="card-body">
+                        <table class="table able-responsive" id="myTable">
+                            <thead>
+                                <tr>
+                                    <th>Sr.No</th>
+                                    <th>Name<span onclick="sortTable(1);">{% bs_icon 'arrow-down' size='1em'  %}</span></th>
+                                    <th>Phone</th>
+                                    <th>Joining Date<span onclick="sortTable(3);">{% bs_icon 'arrow-down' size='1em'  %}</span></th>
+                                    <th>Address<span onclick="sortTable(4);">{% bs_icon 'arrow-down' size='1em'  %}</span></th>
+                                    <th>Account Status <span onclick="sortTable(5);">{% bs_icon 'arrow-down' size='1em'  %}</span></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in data %}
+                                <tr>
+                                    <td></td>
+                                    <td>{{i.grdnr_name}}</td>
+                                    <td>{{i.grdnr_phone}}</td>
+                                    <td>{{i.grdnr_joining_date}}</td>
+                                    <td>{{i.grdnr_address}}</td>
+                                    <td>{{i.grdnr_account_status}}</td>
+                                    
+                                    <td><a href="/display_data/{{i.id}}" >More</a></td>
+                                </tr>
+                                {%endfor%}
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+            
+        </div>
+        <br>
+        <br>
+        <div class="row container" id="showmore">
+                       
+            <div class="col-11" style="margin-left: 15.5%; font-size: small;">
+                <div class="card">
+                    <div class="card-header">
+                        <strong><a href="/display_data/0">{% bs_icon 'arrow-left-circle-fill' size='1.5em'  %}</a> &nbsp; &nbsp; &nbsp; Grdnr's Details</strong>
+                    </div>
+                    <div class="card-body">
+                        <b1>BASIC INFO</b1><br>
+                        <div class="row">
+                            <div class="col-3">
+                                Name:<h6>{% for i in results1 %} {{i.grdnr_name}}{%endfor%}</h6>
+                            </div>
+                            <div class="col-3">
+                                Phone:<h6>{% for i in results1 %} {{i.grdnr_phone}}{%endfor%}</h6>
+                            </div>
+                            <div class="col-3">
+                                Account Status:<h6>{% for i in results1 %} {{i.grdnr_account_status}}{%endfor%}</h6>
+                            </div>
+                            <div class="col-2">
+                                Joining Date:<h6>{% for i in results1 %} {{i.grdnr_joining_date}}{%endfor%}</h6>
+                            </div>
+                            <div class="col-1">
+                                <img src="{% static 'grdnr_server/TestImg.jpeg' %}" class="rounded-circle" alt="Profile Image" width="60" height="60" >
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                Address:<br><b>{% for i in results1 %} {{i.grdnr_address}}{%endfor%}</b>
+                            </div>
+                            <div class="col-3">
+                                Languages:<br><b>{% for i in results1 %} {{i.grdnr_language}}{%endfor%}</b>
+                            </div>
+                            <div class="col-3">
+                                ID Number:<br><b>{% for i in results1 %} {{i.grdnr_idno}}{%endfor%}</b>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <b1>TASKS DETAILS</b1>
+                            <table class="table able-responsive" id="myTaskTable">
+                                <thead>
+                                    <tr>
+                                        <th>sr.#</th><th>Task Name</th><th>Order Date</th><th>Task Status</th>
+                                        <th>Value</th><th>Description</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>               
+                                    {% for i in order_task %}
+                                   
+                                    <tr>
+                                        <td></td>
+                                        <td>{{i.task_title}}</td>
+                                        <td>{{i.assign_task_date}}</td>
+                                        <td>{{i.task_status}}</td>
+                                        <td>{{i.task_values}}</td>
+                                        <td>{{i.task_details}}</td>
+                                    </tr>
+                                   
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <div class="row" style="font-weight: 700;">
+                                <div class="col-4">
+                                  Total
+                                </div>
+                                <div class="col-4">
+      
+                                </div>
+                                <div class="col-4">
+                                  &nbsp;&nbsp;<span id="sumofall"></span>
+                                </div>
+      
+                              </div>
+                              <hr>
+                            <div class="col">
+                                Tasks Completed : {{count_completed_tasks}}
+                                <div class="progress">
+                                    <div id="div1" class="progress-bar progress-bar-striped" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"> </div>
+                                  </div> 
+                            </div>
+                            <div class="col">
+                                Tasks Active : {{count_active_tasks}}
+                                <div class="progress">
+                                    <div id="div2" class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"> </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                Total Tasks : {{count_tasks}}
+                                <div class="progress">
+                                    <div id="div3" class="progress-bar progress-bar-striped bg-info" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                  </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <b1>Account Status</b1>
+                            <div class="col-2">
+                                Total Earnings: <h6 id="totalearnings"></h6>
+                                    <!-- <select id="currency_rate" onchange="currency_change(this.value);">
+                                        <option>AED</option>
+                                        <option>USD</option>
+                                        <option>PKR</option>
+                                    </select> -->
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <br><br>
+    </body>
+</html>

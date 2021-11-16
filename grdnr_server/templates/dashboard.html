@@ -1,0 +1,207 @@
+{% include 'base.html' %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load bootstrap_icons %}
+
+
+<html>
+    <head>
+        <title>Dashboard</title>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+        <style>
+            @media(max-width: 500px){
+                body{
+                    background-color: rgb(243, 230, 179);
+                }
+            }
+            #container{
+                display: flex;
+                flex-wrap: wrap;
+            }
+            #container > div{
+                background-color: rgb(238, 240, 240);
+                font-size: 15px;
+                margin: 20px;
+                padding: 20px;
+                width:150px;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container" style="margin-left: 15%; width: auto;">
+            <div class="card">
+                <div class="card-header">
+                    {% bs_icon 'speedometer' size='1.5em'  %} Dashboard
+                </div>
+                <div class="card-body" style="align-self: center;">
+                    <div id="container">
+                        <div>
+                            {% bs_icon 'people-fill' size='2em'  %}
+                            GRDNR<br><b>{{total_grdnr}}</b>
+                        </div>
+                        <div>
+                            {% bs_icon 'person-plus-fill' size='2em'  %}
+                            Active<br><b>{{active_grdnr}}</b>
+                        </div>
+                        <div>
+                            {% bs_icon 'person-dash-fill' size='2em'  %}
+                            Inactive<br><b>{{inactive_grdnr}}</b>
+                        </div>
+                        <div>
+                            {% bs_icon 'list-task' size='2em'  %}
+                            Tasks<br> <b>{{total_tasks}}</b>
+                        </div>
+                        <div>
+                            {% bs_icon 'check2-circle' size='2em'  %}
+                            Job Done<br> <b>{{job_done}}</b>
+                        </div>
+                        <div>
+                            {% bs_icon 'people' size='2em'  %}
+                            Clients<br> <b>03</b>
+                            
+                        </div>
+                    </div>                                     
+                </div>
+</div>
+<div class="container">
+    <div class="row">
+            <div class="col-md-6">
+                <canvas id="barChart"></canvas>
+              </div>
+            <div class="col-md-6">
+                <canvas id="pieChart"></canvas>
+              </div>
+    </div>
+
+</div>
+<div class="container">
+    <div class="row">
+            <div class="col-md-12">
+                <h5>Area/Zone Stats</h5>
+                <canvas id="pieChart1"></canvas>
+            </div>
+    </div>
+</div>
+<br><br><br>
+
+</div>
+      
+    </body>
+    <script>
+
+        // barChart1
+var brChrt = document.getElementById("pieChart1").getContext("2d");
+var myBarChart1 = new Chart(brChrt, {
+    type:'pie',
+    data:{
+        labels: [{%for i in count_area%} '{{i.grdnr_address}}', {%endfor%}],
+        datasets: [{
+        label: 'Area Stats',
+        data: [{% for i in count_area %} '{{i.count}}', {% endfor %}],
+    }]
+},
+// options: {
+// scales: {
+//     xAxes: [{
+//             gridLines: {
+//                 display:false
+//             }
+//         }],
+// yAxes: [{
+//     gridLines: {
+//                 display:false
+//             },   ticks: {beginAtZero: true}}]
+
+// }
+
+// }
+});
+        //bar
+var ctxB = document.getElementById("barChart").getContext('2d');
+var myBarChart = new Chart(ctxB, {
+type: 'bar',
+data: {
+labels: ["GRDNR", "Active", "In-Active", "New", "Left", "Driving Licence"],
+datasets: [{
+label: 'GRDNR Stats',
+data: ['{{total_grdnr}}', '{{active_grdnr}}', '{{inactive_grdnr}}', 5, 2, 3],
+// backgroundColor: [
+// 'rgba(255, 99, 132, 0.2)',
+// 'rgba(54, 162, 235, 0.2)',
+// 'rgba(255, 206, 86, 0.2)',
+// 'rgba(75, 192, 192, 0.2)',
+// 'rgba(153, 102, 255, 0.2)',
+// 'rgba(255, 159, 64, 0.2)'
+// ],
+// borderColor: [
+// 'rgba(255,99,132,1)',
+// 'rgba(54, 162, 235, 1)',
+// 'rgba(255, 206, 86, 1)',
+// 'rgba(75, 192, 192, 1)',
+// 'rgba(153, 102, 255, 1)',
+// 'rgba(255, 159, 64, 1)'
+// ],
+// borderWidth: 1
+}]
+},
+options: {
+scales: {
+    xAxes: [{
+            gridLines: {
+                display:false
+            }
+        }],
+yAxes: [{
+    gridLines: {
+                display:false
+            },   ticks: {beginAtZero: true}}]
+}
+}
+});
+
+//pichart
+var ctxB = document.getElementById("pieChart").getContext('2d');
+var myBarChart = new Chart(ctxB, {
+type: 'pie',
+data: {
+labels: ["Total Tasks", "Completed", "In-progress", "Pending"],
+datasets: [{
+label: 'Tasks Stats',
+data: ['{{total_grdnr}}', '{{active_grdnr}}', '{{inactive_grdnr}}', 5, 2, 3],
+// backgroundColor: [
+// 'rgba(255, 99, 132, 0.2)',
+// 'rgba(54, 162, 235, 0.2)',
+// 'rgba(255, 206, 86, 0.2)',
+// 'rgba(75, 192, 192, 0.2)',
+// 'rgba(153, 102, 255, 0.2)',
+// 'rgba(255, 159, 64, 0.2)'
+// ],
+// borderColor: [
+// 'rgba(255,99,132,1)',
+// 'rgba(54, 162, 235, 1)',
+// 'rgba(255, 206, 86, 1)',
+// 'rgba(75, 192, 192, 1)',
+// 'rgba(153, 102, 255, 1)',
+// 'rgba(255, 159, 64, 1)'
+// ],
+// borderWidth: 1
+}]
+},
+options: {
+scales: {xAxes: [{
+            gridLines: {
+                display:false
+            }
+        }],
+yAxes: [{
+    gridLines: {
+                display:false
+            },   ticks: {beginAtZero: true}}]
+}
+}
+});
+</script>
+</html>

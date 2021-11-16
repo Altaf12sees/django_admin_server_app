@@ -1,0 +1,176 @@
+{% include 'base.html' %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load bootstrap_icons %}
+{% load static %}
+<html>
+    <head>
+        <title>Home</title>
+            <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    </head>
+    <body>
+            <div class="container horizontal-scrollable" id="card1">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-5">
+                                <strong>{{data.grdnr_name}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-size: smaller;">[
+                                    {% if data.grdnr_account_status == 'Active' %}
+                                    <span style="color: green;">{{data.grdnr_account_status}}</span>
+                                    {% else %}
+                                    <span style="color: red;">{{data.grdnr_account_status}}</span>
+                                    {%endif%}
+                                    ]</span>
+                                </strong>
+                            </div>
+                            <div class="col-6"></div>
+                            <div class="col-1">
+                                <a href="#" onclick="edit_block();" title="Edit">{% bs_icon 'pencil-square' size='1.5em'  %}</a>
+                            </div>
+                        </div> 
+                    </div>
+
+                    <div class="row container">
+                        <div class="col-sm-2">
+                            <img src="{% static 'grdnr_server/TestImg.jpeg' %}" class="rounded-circle" alt="Profile Image" width="100" height="100" >
+                        </div>
+                        <div class="col-sm-10">
+                            {% for i in data %}
+                            {{i.grdnr_address}}<br>
+                            {%endfor%}
+                            <table class="table" style="font-size: small;">
+                                <thead>
+                                    <tr>
+                                        <th>Phone</th>
+                                        <th>Address</th>
+                                        <th>Joining Date</th>
+                                    </tr>
+                                </thead>
+                                    <tr>  
+                                        <td>{{data.grdnr_phone}}</td>
+                                        <td>{{data.grdnr_address}}</td>
+                                        <td>{{data.grdnr_joining_date}}</td> 
+                                    </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm"></div>
+                        <div class="col-sm" style="text-align: center;"><a onclick="collapse(0);" title='Show' data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" id="showMore">
+                            {% bs_icon 'eye-fill' size='2em'  %}
+                        </a></div>
+                        <div class="col-sm"></div>
+                    </div>
+                    
+                    <div class="collapse" id="MainBlock">
+                        <div class="row">
+                            <style>#grdnr_profile_headings{color:rgb(20, 61, 194);}</style>
+                            <strong id="grdnr_profile_headings">{% bs_icon 'info-circle' size='1.2em'  %} Professional Info</strong><br>
+                            <div class="col-4"><strong>Languages:</strong> {{data.grdnr_language}}</div>
+                            <div class="col-4"><strong>Profession:</strong> {{data.grdnr_profession}}</div>
+                            <div class="col-4"><strong>Skills:</strong> {{data.grdnr_skills}}</div>
+                        </div><br>
+                        <div class="row">
+                            <strong id="grdnr_profile_headings">{% bs_icon 'card-list' size='1.2em'  %} Documents</strong><br>
+                            <div class="col-3"><strong>Emirates ID</strong>
+                                <div class="col">
+                                    <ol>
+                                        <li><a href="#">Emirates ID Front </a></li>
+                                        <li><a href="#">Emirates ID Back </a></li>
+                                    </ol>
+                                </div>
+                            </div>
+                            <div class="col-3"><strong>Visa Copy</strong> 
+                            <div class="col">
+                                <ol>
+                                    <li><a href="#">VISA Copy </a></li>
+                                </ol> 
+                            </div>
+                            </div>
+                            <div class="col-3"><strong>Driving Licence</strong> 
+                            <div class="col">
+                                <ol>
+                                    <li><a href="#">Driving Licence Copy </a></li>
+                                </ol>
+                            </div>
+                            </div>
+                            <div class="col-3"><strong>PCR Report</strong>
+                            <div class="col">
+                                <ol>
+                                    <li><a href="#">PCR_Report </a></li>
+                                    <li></li>
+                                </ol>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            &nbsp;<strong id="grdnr_profile_headings">{% bs_icon 'file-medical' size='1.2em'  %} Health Report</strong><br>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-sm"></div>
+                        <div class="col-sm" style="text-align: center;">
+                            <p onclick="collapse(1);" title='Hide' data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" id="Hide01">
+                                {% bs_icon 'eye-slash-fill' size='2em'  %}
+                            </p>
+                        </div>
+                        <div class="col-sm"></div>
+                    </div>
+                        
+                    </div>
+                    <br>
+                      <div class="card" id="editblock">
+                          <div class="card-header">
+                              <div class="row">
+                                <div class="col-11">
+                                    <strong>Edit {% bs_icon 'pencil-square' size='1em'  %}</strong>
+                                </div>
+                                <div class="col-1" style="padding: 5px;">
+                                     
+                                    <span style="color:green;">{% bs_icon 'check-circle-fill' size='1.5em'  %}</span>&nbsp;&nbsp;
+                                    <span style="color:red;">{% bs_icon 'x-circle-fill' size='1.5em'  %}</span>
+                                </div>
+                              </div>
+                          </div>
+                        <div class="card card-body">
+                          <div class="container">
+                              <form action="/update_grdnr_data/119">
+                                <input type="text" name="username" value="{{data}}">
+                                <input type="submit" value="submit">
+
+                              </form>
+
+                          </div>
+                        </div>
+                </div>
+            </div>
+    </body>
+    <script>
+        document.getElementById('Hide01').style.display = 'none';
+        document.getElementById('editblock').style.display = 'none';
+function collapse(n){
+    if(n == 0){
+        document.getElementById('Hide01').style.display = 'block';
+        document.getElementById('showMore').style.display = 'none';
+        document.getElementById('MainBlock').style.display = 'block';
+        var collapseElementList = [].slice.call(document.querySelectorAll('.collapse'))
+        var collapseList = collapseElementList.map(function (collapseEl) {
+            return new bootstrap.Collapse(collapseEl)
+        })
+    }
+    if(n == 1){
+        document.getElementById('Hide01').style.display = 'none';
+        document.getElementById('showMore').style.display = 'block';
+        document.getElementById('MainBlock').style.display = 'none';
+    }
+    
+}
+
+
+function edit_block(){
+    document.getElementById('editblock').style.display = 'block';
+}
+    </script>
+</html>

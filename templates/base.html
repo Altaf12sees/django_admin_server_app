@@ -1,0 +1,59 @@
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load bootstrap_icons %}
+<html>
+    <head>
+        <title>Home</title>
+    </head>
+    <style>
+        html {
+  height: 100%;
+}
+body {
+  min-height: 100%;
+}
+    </style>
+    <body>
+        <nav class="navbar navbar-light bg-light fixed-top navbar-expand-lg">            
+            <div style="background-color:#fcfcfc; padding: 10px;" class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <!-- <image style="width:100%; border-radius: 100;" class="avatar" src="../static/media/grdnr.jpeg"></image> -->
+                    <strong>Admin GRDNR App </strong>
+                    <span style="font-size:x-small; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">&nbsp;&nbsp;&nbsp;{% now "D, d F, Y " %}</span>
+                    <!-- <a class="nav-item nav-link" href="#">Features</a>
+                    <a class="nav-item nav-link" href="#">Pricing</a>
+                    <a class="nav-item nav-link disabled" href="#">Disabled</a> -->
+                </div>
+            </div>
+          </nav>
+          
+          <div class="container-fluid" style="position: absolute;">
+            <div class="row">
+              <div style="width:15%; background-color: rgb(39, 38, 38); padding:25px; color:white; position: fixed;" class="col-2">
+                    <br><br><br><div class="row"><span><a style="text-decoration: none !important; color: white;" href="/dashboard">{% bs_icon 'speedometer' size='1.5em'  %} &nbsp; &nbsp;Dashboard</a></span></div>
+                    <br>
+                    <div class="row"><span><a style="text-decoration: none !important; color: white;" href="/display_data/0">{% bs_icon 'people-fill' size='1.5em'  %} &nbsp; &nbsp;GRDNRs</span></a></div>
+                    <br>
+                    <div class="row"><span><a style="text-decoration: none !important; color: white;" href="/get_client_info"> {% bs_icon 'person-lines-fill' size='1.5em'  %} &nbsp; &nbsp;Clients</span></a></div>
+                    <br>
+                    <div class="row"><span><a style="text-decoration: none !important; color: white;" href="/get_all_tasks_view">{% bs_icon 'list-task' size='1.5em'  %}  &nbsp; &nbsp;All Tasks</span></a></div>
+                    <br>
+                    <div class="row"><span><a style="text-decoration: none !important; color: white;" href="/get_order_tasks">{% bs_icon 'border-style' size='1.5em'  %} &nbsp; &nbsp;Order Tasks</span></a></div>
+                    <br>
+                    <div class="row"><span><a style="text-decoration: none !important; color: white;" href="/get_account_detail">{% bs_icon 'bank2' size='1.5em'  %} &nbsp; &nbsp;Accounts</span></a></div><br><br><br><br><br><br><br><br><br><br><br>
+                </div>
+              
+            </div>
+          </div><br><br><br>
+            {%block body%}
+            {%endblock%}
+          
+        <footer>
+          <div style="background-color:#eaedf0;" class="footer-copyright text-center py-3 fixed-bottom">© 2020 Copyright:
+            <a href="https://grdn.online/"> grdn.online</a>
+          </div>
+        </footer>
+    </body>
+</html>

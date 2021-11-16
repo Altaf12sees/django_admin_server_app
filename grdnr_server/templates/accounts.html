@@ -1,0 +1,151 @@
+{% include 'base.html' %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load bootstrap_icons %}
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accounts</title>
+        <style>
+            b1{
+                text-decoration: underline;
+                font-weight: 700;
+                color: rgb(10, 52, 141);
+            }
+            #showmore{
+                display: none;
+            }
+            
+            body{counter-reset: Serial;}
+            table{border-collapse: separate; font-size: smaller; overflow-x:auto;}
+            tr td:first-child:before{
+                counter-increment: Serial;      /* Increment the Serial counter */
+                content:counter(Serial); /* Display the counter */}
+        </style>
+        <script>
+            function sortTable(n) {
+              var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+              table = document.getElementById("myTable");
+              switching = true;
+              //Set the sorting direction to ascending:
+              dir = "asc"; 
+              /*Make a loop that will continue until
+              no switching has been done:*/
+              while (switching) {
+                //start by saying: no switching is done:
+                switching = false;
+                rows = table.rows;
+                /*Loop through all table rows (except the
+                first, which contains table headers):*/
+                for (i = 1; i < (rows.length - 1); i++) {
+                  //start by saying there should be no switching:
+                  shouldSwitch = false;
+                  /*Get the two elements you want to compare,
+                  one from current row and one from the next:*/
+                  x = rows[i].getElementsByTagName("TD")[n];
+                  y = rows[i + 1].getElementsByTagName("TD")[n];
+                  /*check if the two rows should switch place,
+                  based on the direction, asc or desc:*/
+                  if (dir == "asc") {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                      //if so, mark as a switch and break the loop:
+                      shouldSwitch= true;
+                      break;
+                    }
+                  } else if (dir == "desc") {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                      //if so, mark as a switch and break the loop:
+                      shouldSwitch = true;
+                      break;
+                    }
+                  }
+                }
+                if (shouldSwitch) {
+                  /*If a switch has been marked, make the switch
+                  and mark that a switch has been done:*/
+                  rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                  switching = true;
+                  //Each time a switch is done, increase this count by 1:
+                  switchcount ++;      
+                } else {
+                  /*If no switching has been done AND the direction is "asc",
+                  set the direction to "desc" and run the while loop again.*/
+                  if (switchcount == 0 && dir == "asc") {
+                    dir = "desc";
+                    switching = true;
+                  }
+                }
+              }
+            }
+           
+            var k1 = '{{key}}'
+            document.addEventListener('DOMContentLoaded', function(){
+                if(k1 == 0){
+                document.getElementById('grdnr_list').style.display = 'block';
+                document.getElementById('showmore').style.display = 'none';
+            }else{
+                document.getElementById('grdnr_list').style.display = 'none';
+                document.getElementById('showmore').style.display = 'block';
+                document.getElementById('div3').style.width = "{{count_tasks}}%";
+                document.getElementById('div2').style.width = "{{count_active_tasks}}%";
+                document.getElementById('div1').style.width="{{count_completed_tasks}}%";
+                var table = document.getElementById("myTaskTable"), sumVal = 0;
+                for(var i =1; i<table.rows.length; i++){
+                sumVal = sumVal+parseInt(table.rows[i].cells[4].innerHTML);
+                }
+                document.getElementById("sumofall").innerHTML = "Total Sum = "+ sumVal;
+                document.getElementById("totalearnings").innerHTML = sumVal+" AED";
+                 }
+            }, false);
+          
+        </script>
+    </head>
+    <body>
+        <div class="row container">
+            <div class="col-2"></div>
+            <div class="col-10" id="grdnr_list">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>All GRDNR'S Accounts INFO</strong>
+                    </div>
+                    <div class="card-body">
+                        <table class="table able-responsive" id="myTable">
+                            <thead>
+                                <tr>
+                                    <th>Sr.No</th>
+                                    <th>Name<span onclick="sortTable(1);">{% bs_icon 'arrow-down' size='1em'  %}</span></th>
+                                    <th>Account Number</th>
+                                    <th>Balance<span onclick="sortTable(3);">{% bs_icon 'arrow-down' size='1em'  %}</span></th>
+                                    <th>Credit<span onclick="sortTable(4);">{% bs_icon 'arrow-down' size='1em'  %}</span></th>
+                                    <th>Debit<span onclick="sortTable(5);">{% bs_icon 'arrow-down' size='1em'  %}</span></th>
+                                    <th>Account Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in data %}
+                                <tr>
+                                    <td></td>
+                                    <td>{{i.grdnr_name}}</td>
+                                    <td>{{i.account_id}}</td>
+                                    <td>{{i.current_balance}}</td>
+                                    <td>{{i.credit_amount}}</td>
+                                    <td>{{i.debit_amount}}</td>
+                                    <td>{{i.agent_account_status}}</td>
+                                    
+                                    <td><a href="/display_data/{{i.id}}" >More</a></td>
+                                </tr>
+                                {%endfor%}
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+</html>

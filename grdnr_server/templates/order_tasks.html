@@ -1,0 +1,91 @@
+{% include 'base.html' %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load bootstrap_icons %}
+
+
+<html>
+    <head>
+        <title>Dashboard</title>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+        <style>
+            body{counter-reset: Serial;}
+            table{border-collapse: separate; font-size: smaller; overflow-x:auto;}
+            tr td:first-child:before{
+                counter-increment: Serial;      /* Increment the Serial counter */
+                content:counter(Serial); /* Display the counter */}
+            @media(max-width: 500px){
+                body{
+                    background-color: rgb(243, 230, 179);
+                }
+            }
+            #container{
+                display: flex;
+                flex-wrap: wrap;
+            }
+            #container > div{
+                background-color: rgb(238, 240, 240);
+                font-size: 15px;
+                margin: 20px;
+                padding: 20px;
+                width:150px;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container" style="margin-left: 15%; width: auto;">
+            <div class="card">
+                <div class="card-header">
+                    {% bs_icon 'border-style' size='1.5em'  %} Order Tasks
+                    
+                </div>
+            </div>
+<div class="container">
+    <div class="row">
+            <div class="col-md-12">
+                <table id="myTable" class="table table-responsive" style="font-size: small; overflow-x: auto; white-space: nowrap;">
+                    <thead>
+                        <tr>
+                            <th>Sr.#</th><th>Task<span onclick="sortTable(1);">{% bs_icon 'arrow-down' size='1em'  %}</span></th>
+                            <th>Assigned To</th>
+                            <th>Details</th>
+                            <th>Value<span onclick="sortTable(3);">{% bs_icon 'arrow-down' size='1em'  %}</span></th>
+                            <th>Status<span onclick="sortTable(4);">{% bs_icon 'arrow-down' size='1em'  %}</span></th>
+                            <th>Created Date</th>
+                            <th>Start Date - End Date</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    {% for i in data %}
+                    <tr>
+                        <td></td>   
+                        <td>{{i.task_title}}</td>
+                        <td>{{i.grdnr_name}}</td>
+                        <td>{{i.task_details}}</td>
+                        <td>{{i.task_values}}</td>
+                        <td>{% if i.task_status == 'Active' %}
+                            <span style="color:green">{{i.task_status}}</span>
+                            {%else%}
+                            <span style="color:blue">{{i.task_status}}</span>
+                            {%endif%}
+                        </td>
+                        <td>{{i.assign_task_date}}</td>
+                        <td>{{i.task_start_date}} - {{i.task_end_date}}</td>
+                        <td style="font-size: smaller;">{{i.assign_task_date | timesince}} ago</td>
+                    </tr>
+                    {% endfor %}
+                
+                </table> 
+                
+            </div>
+    </div>
+
+</div>
+</div>
+      
+    </body>
+    
+</html>

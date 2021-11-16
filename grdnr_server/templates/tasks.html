@@ -1,0 +1,129 @@
+{% include 'base.html' %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load bootstrap_icons %}
+
+<html>
+    <head>
+        <title>Tasks</title>
+        <style>
+            body{counter-reset: Serial;}
+            table{border-collapse: separate; font-size: smaller; overflow-x:auto;}
+            tr td:first-child:before{
+                counter-increment: Serial;      /* Increment the Serial counter */
+                content:counter(Serial); /* Display the counter */}
+        </style>
+        <script>
+            function sortTable(n) {
+              var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+              table = document.getElementById("myTable");
+              switching = true;
+              //Set the sorting direction to ascending:
+              dir = "asc"; 
+              /*Make a loop that will continue until
+              no switching has been done:*/
+              while (switching) {
+                //start by saying: no switching is done:
+                switching = false;
+                rows = table.rows;
+                /*Loop through all table rows (except the
+                first, which contains table headers):*/
+                for (i = 1; i < (rows.length - 1); i++) {
+                  //start by saying there should be no switching:
+                  shouldSwitch = false;
+                  /*Get the two elements you want to compare,
+                  one from current row and one from the next:*/
+                  x = rows[i].getElementsByTagName("TD")[n];
+                  y = rows[i + 1].getElementsByTagName("TD")[n];
+                  /*check if the two rows should switch place,
+                  based on the direction, asc or desc:*/
+                  if (dir == "asc") {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                      //if so, mark as a switch and break the loop:
+                      shouldSwitch= true;
+                      break;
+                    }
+                  } else if (dir == "desc") {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                      //if so, mark as a switch and break the loop:
+                      shouldSwitch = true;
+                      break;
+                    }
+                  }
+                }
+                if (shouldSwitch) {
+                  /*If a switch has been marked, make the switch
+                  and mark that a switch has been done:*/
+                  rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                  switching = true;
+                  //Each time a switch is done, increase this count by 1:
+                  switchcount ++;      
+                } else {
+                  /*If no switching has been done AND the direction is "asc",
+                  set the direction to "desc" and run the while loop again.*/
+                  if (switchcount == 0 && dir == "asc") {
+                    dir = "desc";
+                    switching = true;
+                  }
+                }
+              }
+            }
+        </script>
+    </head>
+    <body>   
+        <div style="margin-left: 15.5%;">
+            <div class="container horizontal-scrollable" style=" font-size: small; width: 92em; ">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>All Tasks</strong>
+                    </div>
+                    <div class="card-body">   
+                        <table id="myTable" class="table table-responsive" style="font-size: small; overflow-x: auto; white-space: nowrap;">
+                            <thead>
+                                <tr>
+                                    <th>Sr.#</th><th>Task<span onclick="sortTable(1);">{% bs_icon 'arrow-down' size='1em'  %}</span></th>
+                                    <th>Details</th>
+                                    <th>Value<span onclick="sortTable(3);">{% bs_icon 'arrow-down' size='1em'  %}</span></th>
+                                    <th>Status<span onclick="sortTable(4);">{% bs_icon 'arrow-down' size='1em'  %}</span></th>
+                                    <th>Created Date</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            {% for i in data %}
+                            <tr>
+                                <td></td>   
+                                <td>{{i.task_title}}</td>
+                                <td>{{i.task_detail}}</td>
+                                <td>{{i.task_value}}</td>
+                                <td>{{i.task_status}}</td>
+                                <td>{{i.task_created_date}}</td>
+                                <td>Show</td>
+                            </tr>
+                            {% endfor %}
+                        </table> 
+                        <div class="row" style="font-weight: 700;">
+                          <div class="col-4">
+                            Total
+                          </div>
+                          <div class="col-3">
+
+                          </div>
+                          <div class="col-5">
+                            <span id="sumofall"></span>
+                          </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </body>
+    <script>
+      var table = document.getElementById("myTable"), sumVal = 0;
+      for(var i =1; i<table.rows.length; i++){
+          sumVal = sumVal+parseInt(table.rows[i].cells[3].innerHTML);
+      }
+      document.getElementById("sumofall").innerHTML = "Total Sum = "+ sumVal;
+</script>
+</html>
